@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crues : quand une station solaire doit-elle mesurer plus souvent ? · Nobel Djessou</title>
+<style>
+  :root { --bg: #ffffff; --surface: #f4f7fb; --line: #dde3ea; --fg: #113b54; --muted: #4f6573; --accent: #dbe64c; --soft: #bbd1ff;
+          --c60: #8a99a6; --c15: #113b54; --level: #0693e3; --rise: #ff6900; --model: #7a8f00; --err: #b02a37; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 24px 20px 64px; }
+  .notice { background: var(--surface); color: var(--muted); font-size: 14px; padding: 8px 20px; text-align: center; border-bottom: 1px solid var(--line); }
+  h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 32px 0 8px; }
+  h2 { font-size: 22px; margin: 48px 0 12px; }
+  .lead { font-size: 18px; color: var(--muted); }
+  a { color: var(--fg); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 0; list-style: none; }
+  .steps li { background: var(--surface); border-radius: 8px; padding: 14px 16px; border-top: 4px solid var(--accent); }
+  .steps b { display: block; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: tabular-nums; margin: 8px 0 16px; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; white-space: normal; vertical-align: bottom; }
+  td.num, th.num { text-align: right; }
+  tr.best td { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+  select { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--fg); max-width: 100%; }
+  svg { width: 100%; height: auto; background: var(--surface); border-radius: 8px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+  .legend span::before { content: ""; display: inline-block; width: 14px; height: 3px; margin-right: 6px; vertical-align: middle; background: var(--c); }
+  .legend span.dot::before { width: 9px; height: 9px; border-radius: 50%; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 12px 0; }
+  .kpis div { background: var(--surface); border-radius: 8px; padding: 10px 14px; }
+  .kpis b { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+  footer { margin-top: 56px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="notice">Projet personnel. Données publiques uniquement (HydroPortail, SC Vigicrues).</div>
+<main>
+  <h1>Crues : quand une station solaire doit-elle mesurer plus souvent ?</h1>
+  <p class="lead">Une station hydrométrique sur panneau solaire mesure la hauteur d'eau une fois par heure pour économiser son énergie. Pendant une crue, c'est trop lent. Voici sept ans de vraies crues françaises, rejouées avec plusieurs règles qui décident sur la station quand passer à une mesure par quart d'heure.</p>
+
+  <h2>Le problème</h2>
+  <p>Chaque mesure et chaque envoi en 4G coûtent de l'énergie à une station autonome. Une mesure par heure suffit en temps normal, mais si l'eau passe le seuil d'alerte juste après une mesure, l'alerte part avec près d'une heure de retard. Mesurer tous les quarts d'heure toute l'année multiplie les mesures par quatre, pour quelques jours de crue.</p>
+  <p>La station doit donc passer au quart d'heure d'elle-même, et avant le seuil. Quelle règle donne des alertes à temps avec le moins de mesures ?</p>
+
+  <h2>La démarche</h2>
+  <ol class="steps">
+    <li><b>1 · Données</b>Hauteurs d'eau de six stations françaises, 2019 à 2025, remises sur une grille de 5 minutes.</li>
+    <li><b>2 · Rejeu</b>La station mesure à chaque heure pile ; en mode intensif, aussi à :15, :30 et :45. Une règle décide chaque heure.</li>
+    <li><b>3 · Règles</b>Au-dessus d'un niveau, montée rapide, ou petit réseau de neurones INT8 (ONNX) qui prévoit le seuil à 3 heures.</li>
+    <li><b>4 · Sans tricher</b>Chaque station est testée avec un modèle et des réglages choisis sur les cinq autres.</li>
+  </ol>
+
+  <h2>La plus grosse crue de chaque station</h2>
+  <div class="controls">
+    <label for="station">Station</label> <select id="station"></select>
+    <label for="policy">Règle</label> <select id="policy"></select>
+  </div>
+  <svg id="flood" viewBox="0 0 900 340" role="img" aria-label="Hauteur d'eau pendant la crue et mesures de la station"></svg>
+  <div class="legend">
+    <span style="--c: var(--c15)">hauteur réelle (pas de 5 min)</span>
+    <span style="--c: var(--err)">seuil d'alerte</span>
+    <span class="dot" id="dot-legend" style="--c: var(--level)">mesures de la station</span>
+  </div>
+  <div class="kpis">
+    <div><span class="muted">Retard de l'alerte</span><b id="k-delay"></b></div>
+    <div><span class="muted">Pic manqué</span><b id="k-peak"></b></div>
+    <div><span class="muted">Mesures sur ces 36 h</span><b id="k-count"></b></div>
+  </div>
+  <p class="muted" id="flood-note"></p>
+
+  <h2>Le compromis : mesures dépensées contre alertes à temps</h2>
+  <svg id="curve" viewBox="0 0 900 360" role="img" aria-label="Part des alertes en 15 minutes ou moins selon le nombre de mesures"></svg>
+  <div class="legend">
+    <span class="dot" style="--c: var(--c60)">fixe, une par heure</span>
+    <span class="dot" style="--c: var(--c15)">fixe, une par quart d'heure</span>
+    <span style="--c: var(--level)">au-dessus d'un niveau</span>
+    <span style="--c: var(--rise)">l'eau monte vite</span>
+    <span style="--c: var(--model)">modèle INT8</span>
+  </div>
+  <p class="muted">Chaque point est un réglage, sur les six stations réunies. En haut à gauche : peu de mesures, alertes à temps. L'axe horizontal est logarithmique.</p>
+
+  <h2>Les réglages choisis sans la station testée</h2>
+  <p class="muted" id="op-note"></p>
+  <div class="table-wrap"><table id="operating"></table></div>
+
+  <h2>Les stations</h2>
+  <p class="muted" id="st-note"></p>
+  <div class="table-wrap"><table id="stations"></table></div>
+
+  <h2>Coût du modèle</h2>
+  <p class="muted" id="machine"></p>
+  <div class="table-wrap"><table id="cost"></table></div>
+
+  <h2>Ce que disent les chiffres</h2>
+  <ul>
+    <li><strong>Une mesure par heure ne suffit pas pendant une crue</strong> : l'alerte part en moyenne avec près d'une demi-heure de retard, et quelques crues brèves passent entre deux mesures.</li>
+    <li><strong>Passer en mode intensif avant le seuil rattrape presque tout le quart d'heure</strong>, pour quelques pour cent de mesures en plus.</li>
+    <li><strong>La règle du niveau, la plus simple, fait presque aussi bien que le modèle.</strong> Le modèle INT8 tient l'objectif avec un peu moins de mesures, mais l'écart est faible sur 117 crues. Sur la station, la règle du niveau se règle et s'explique en une ligne.</li>
+    <li><strong>La vitesse de montée seule est un mauvais signal</strong> : sur quatre des rivières méditerranéennes, l'eau est déjà montée de plusieurs mètres en une heure. Elle sauve pourtant la crue du Gard d'octobre 2024, où les deux autres règles réagissent trop tard : les deux signaux se complètent.</li>
+    <li><strong>L'INT8 décide comme le FP32 presque à chaque heure</strong>, mais sur ce processeur il est plus lent et son fichier est plus gros. Une décision par heure coûte des dizaines de microsecondes : l'énergie part dans les mesures et les envois, pas dans le calcul.</li>
+  </ul>
+
+  <h2>Limites</h2>
+  <ul>
+    <li>Aucune station ni aucun microcontrôleur testés. Aucune source publique ne donne l'énergie d'une mesure et d'un envoi 4G, donc les règles sont comparées en nombre de mesures.</li>
+    <li>La série source ne garde une valeur que quand le niveau change : entre deux points, la vérité est une droite. Les trous de plus de 12 heures sont des données manquantes (le Vidourle n'a que 39 % de données valides).</li>
+    <li>Le seuil d'alerte est une statistique (maximum journalier dépassé 2 % des jours), pas un vrai seuil de vigilance.</li>
+    <li>Une mesure est supposée exacte et toujours envoyée : ni bruit du capteur, ni coupure réseau.</li>
+  </ul>
+
+  <footer>
+    Nobel Djessou · ingénieur IA embarquée ·
+    <a href="https://github.com/profirst30/flood-edge">code sur GitHub</a> ·
+    <a href="https://www.linkedin.com/in/nobel-djessou/">LinkedIn</a><br>
+    Données : hauteurs d'eau instantanées, HydroPortail (SC Vigicrues, ministère de la Transition écologique), téléchargées le 22/10/2026 ; codes des stations issus du référentiel Hub'Eau.
+  </footer>
+</main>
+<script>
+  const NAMES = { fixed_60: 'fixe, une par heure', fixed_15: 'fixe, une par quart d\'heure', level: 'au-dessus d\'un niveau',
+                  rise: 'l\'eau monte vite', model: 'modèle INT8' };
+  const COLORS = { fixed_60: '#8a99a6', fixed_15: '#113b54', level: '#0693e3', rise: '#ff6900', model: '#7a8f00' };
+  const el = (tag, text, cls) => { const e = document.createElement(tag); e.textContent = text; if (cls) e.className = cls; return e; };
+  const fr = (x, d = 1) => x.toLocaleString('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d });
+  function table(id, head, rows, numFrom = 1, best = -1) {
+    const t = document.getElementById(id);
+    t.replaceChildren();
+    const tr = t.createTHead().insertRow();
+    head.forEach((h, i) => tr.appendChild(el('th', h, i >= numFrom ? 'num' : '')));
+    const body = t.createTBody();
+    rows.forEach((r, j) => { const row = body.insertRow(); if (j === best) row.className = 'best';
+      r.forEach((c, i) => row.appendChild(el('td', c, i >= numFrom ? 'num' : ''))); });
+  }
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); if (text !== undefined) e.textContent = text; return e; };
+  const label = (c, x, y, text, anchor = 'middle') => c.appendChild(svg('text', { x, y, 'text-anchor': anchor, 'font-size': 12, fill: '#4f6573' }, text));
+
+  function floodChart(s, policy) {
+    const c = document.getElementById('flood'); c.replaceChildren();
+    const W = 900, H = 340, L = 56, R = 16, T = 16, B = 40;
+    const vals = s.truth.filter(v => v !== null).concat([s.threshold]);
+    const lo = Math.min(...vals), hi = Math.max(...vals), pad = (hi - lo) * 0.08 || 0.1;
+    const n = s.truth.length - 1;
+    const x = i => L + (W - L - R) * i / n, y = v => T + (H - T - B) * (1 - (v - lo + pad) / (hi - lo + 2 * pad));
+    const stepM = (hi - lo) > 4 ? 1 : (hi - lo) > 1.5 ? 0.5 : 0.25;
+    for (let v = Math.ceil((lo - pad) / stepM) * stepM; v <= hi + pad; v += stepM) {
+      c.appendChild(svg('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: '#dde3ea' }));
+      label(c, L - 8, y(v) + 4, fr(Math.abs(v) < 1e-9 ? 0 : v, 2) + ' m', 'end');
+    }
+    for (let h = -18; h <= 18; h += 6) label(c, x(s.onset + h * 12), H - 18, (h > 0 ? '+' : '') + h + ' h');
+    c.appendChild(svg('line', { x1: x(s.onset), x2: x(s.onset), y1: T, y2: H - B, stroke: '#dde3ea', 'stroke-width': 2 }));
+    c.appendChild(svg('line', { x1: L, x2: W - R, y1: y(s.threshold), y2: y(s.threshold), stroke: '#b02a37', 'stroke-dasharray': '6 4' }));
+    let d = '';
+    s.truth.forEach((v, i) => { if (v === null) return; d += (d && s.truth[i - 1] !== null ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(v).toFixed(1); });
+    c.appendChild(svg('path', { d, fill: 'none', stroke: '#113b54', 'stroke-width': 1.6 }));
+    s.measured[policy].forEach(i => { if (s.truth[i] !== null)
+      c.appendChild(svg('circle', { cx: x(i), cy: y(s.truth[i]), r: 3.2, fill: COLORS[policy], stroke: '#fff', 'stroke-width': 0.8 })); });
+  }
+
+  function curveChart(res) {
+    const c = document.getElementById('curve'); c.replaceChildren();
+    const W = 900, H = 360, L = 56, R = 16, T = 16, B = 44;
+    const x = r => L + (W - L - R) * Math.log(r) / Math.log(4.2), y = p => T + (H - T - B) * (1 - (p - 0.3) / 0.72);
+    [1, 1.1, 1.25, 1.5, 2, 3, 4].forEach(r => { c.appendChild(svg('line', { x1: x(r), x2: x(r), y1: T, y2: H - B, stroke: '#dde3ea' }));
+      label(c, x(r), H - 24, '× ' + fr(r, r % 1 ? 2 : 0).replace(/,?0+$/, '')); });
+    label(c, (L + W - R) / 2, H - 6, 'mesures, par rapport à une par heure');
+    for (let p = 0.3; p <= 1.001; p += 0.1) { c.appendChild(svg('line', { x1: L, x2: W - R, y1: y(p), y2: y(p), stroke: '#dde3ea' }));
+      label(c, L - 8, y(p) + 4, fr(100 * p, 0) + ' %', 'end'); }
+    c.appendChild(svg('line', { x1: L, x2: W - R, y1: y(res.settings.target), y2: y(res.settings.target), stroke: '#dbe64c', 'stroke-width': 3 }));
+    label(c, x(1.6), y(res.settings.target) + 16, 'objectif : ' + fr(100 * res.settings.target, 0) + ' % des alertes en 15 min ou moins', 'start');
+    ['level', 'rise', 'model'].forEach(f => {
+      const pts = res.curves[f].map(p => [x(p.ratio), y(p.within_15_min)]);
+      c.appendChild(svg('polyline', { points: pts.map(p => p.map(v => v.toFixed(1)).join(',')).join(' '), fill: 'none', stroke: COLORS[f], 'stroke-width': 2 }));
+      pts.forEach(([a, b]) => c.appendChild(svg('circle', { cx: a, cy: b, r: 3.5, fill: COLORS[f] })));
+    });
+    ['fixed_60', 'fixed_15'].forEach(f => c.appendChild(svg('circle', { cx: x(res.curves[f].ratio), cy: y(res.curves[f].within_15_min), r: 6, fill: COLORS[f] })));
+  }
+
+  Promise.all(['results.json', 'series.json'].map(u => fetch(u).then(r => r.json()))).then(([res, series]) => {
+    const st = document.getElementById('station'), po = document.getElementById('policy');
+    Object.entries(series).forEach(([k, s]) => st.appendChild(new Option(`${s.name} · ${new Date(s.date + 'Z').toLocaleDateString('fr-FR')}`, k)));
+    Object.entries(NAMES).forEach(([k, n]) => po.appendChild(new Option(n, k)));
+    po.value = 'level';
+    const show = () => {
+      const s = series[st.value], p = po.value, f = s.flood[p];
+      floodChart(s, p);
+      document.getElementById('dot-legend').style.setProperty('--c', COLORS[p]);
+      document.getElementById('k-delay').textContent = f.delay_min === null ? 'crue manquée' : f.delay_min + ' min';
+      document.getElementById('k-peak').textContent = f.peak_miss_cm === null ? '-' : fr(f.peak_miss_cm) + ' cm';
+      document.getElementById('k-count').textContent = String(s.measured[p].length);
+      document.getElementById('flood-note').textContent = `Le trait vertical marque le moment où l'eau atteint le seuil (${fr(s.threshold, 2)} m), le ${new Date(s.date + 'Z').toLocaleString('fr-FR', { timeZone: 'UTC' })} (UTC). Le retard est le temps jusqu'à la première mesure de la station au-dessus du seuil.`;
+    };
+    st.addEventListener('change', show); po.addEventListener('change', show);
+    show();
+
+    curveChart(res);
+    const op = res.operating, keys = Object.keys(NAMES);
+    document.getElementById('op-note').textContent = `Pour chaque station, le réglage est choisi sur les cinq autres : le moins cher qui ne manque aucune crue et donne au moins ${fr(100 * res.settings.target, 0)} % des alertes en 15 minutes ou moins. ${op.fixed_60.floods} crues au total.`;
+    const cheapest = keys.filter(k => !k.startsWith('fixed')).reduce((a, b) => op[a].ratio <= op[b].ratio ? a : b);
+    table('operating', ['règle', 'mesures par an', '× une par heure', 'crues manquées', 'retard moyen', 'alertes ≤ 15 min', 'pic manqué au pire'],
+      keys.map(k => [NAMES[k], fr(op[k].per_year, 0), fr(op[k].ratio, 3), String(op[k].missed), fr(op[k].delay_mean_min) + ' min',
+        fr(100 * op[k].within_15_min, 0) + ' %', fr(op[k].peak_miss_max_cm) + ' cm']), 1, keys.indexOf(cheapest));
+
+    document.getElementById('st-note').textContent = `Seuil d'alerte : maximum journalier dépassé ${fr(100 * (1 - res.settings.quantile), 0)} % des jours. Deux dépassements à moins de ${res.settings.merge_h} h d'écart forment une seule crue.`;
+    table('stations', ['station', 'période', 'données valides', 'médiane (m)', 'seuil (m)', 'crues', 'montée max en 1 h (m)'],
+      res.stations.map(s => [s.name, `${s.from.slice(0, 4)}-${s.to.slice(0, 4)}`, fr(100 * s.valid_share) + ' %', fr(s.median_m, 2),
+        fr(s.threshold_m, 2), String(s.floods), fr(s.max_rise_1h_m, 2)]), 2);
+
+    const m = res.machine, k = res.cost;
+    document.getElementById('machine').textContent = `${m.cpu} · ${m.os} · ONNX Runtime ${m.onnxruntime} · un thread, médiane de 500 exécutions · ${k.parameters} paramètres, ${k.macs} multiplications-additions · INT8 et FP32 décident pareil sur ${fr(100 * k.int8_fp32_agreement, 2)} % des heures`;
+    table('cost', ['modèle', 'temps par décision (µs)', 'fichier ONNX'], [
+      ['FP32', fr(k.fp32_us), `${fr(k.fp32_bytes, 0)} octets`], ['INT8', fr(k.int8_us), `${fr(k.int8_bytes, 0)} octets`]]);
+  }).catch(() => { document.getElementById('machine').textContent = 'Les résultats ne se chargent pas : ouvrez la page via un serveur web.'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+{
+  "machine": {
+    "cpu": "AMD Ryzen 7 5825U with Radeon Graphics",
+    "os": "Windows-11-10.0.26200-SP0",
+    "onnxruntime": "1.31.0"
+  },
+  "settings": {
+    "target": 0.95,
+    "quantile": 0.98,
+    "lags": 6,
+    "grid": {
+      "level": [
+        1.0,
+        0.9,
+        0.8,
+        0.7,
+        0.6,
+        0.5,
+        0.4,
+        0.3
+      ],
+      "rise": [
+        0.4,
+        0.2,
+        0.1,
+        0.05,
+        0.03,
+        0.02,
+        0.01
+      ],
+      "model": [
+        0.97,
+        0.95,
+        0.9,
+        0.7,
+        0.5,
+        0.3,
+        0.2,
+        0.1,
+        0.05
+      ]
+    },
+    "max_gap_h": 12,
+    "merge_h": 24
+  },
+  "stations": [
+    {
+      "code": "O200004001",
+      "name": "La Garonne à Toulouse",
+      "from": "2019-01-01",
+      "to": "2025-12-31",
+      "valid_share": 1.0,
+      "median_m": 0.67,
+      "threshold_m": 1.57,
+      "floods": 20,
+      "max_rise_1h_m": 0.46
+    },
+    {
+      "code": "V714401001",
+      "name": "Le Gard à Anduze",
+      "from": "2019-01-01",
+      "to": "2025-12-31",
+      "valid_share": 0.73,
+      "median_m": 0.26,
+      "threshold_m": 2.6,
+      "floods": 20,
+      "max_rise_1h_m": 5.14
+    },
+    {
+      "code": "Y345401001",
+      "name": "Le Vidourle à Sommières",
+      "from": "2019-01-01",
+      "to": "2025-12-31",
+      "valid_share": 0.391,
+      "median_m": 0.11,
+      "threshold_m": 1.71,
+      "floods": 7,
+      "max_rise_1h_m": 0.47
+    },
+    {
+      "code": "V505401001",
+      "name": "L'Ardèche à Vallon-Pont-d'Arc",
+      "from": "2019-01-01",
+      "to": "2025-12-31",
+      "valid_share": 0.952,
+      "median_m": -0.53,
+      "threshold_m": 3.26,
+      "floods": 25,
+      "max_rise_1h_m": 2.92
+    },
+    {
+      "code": "Y123201002",
+      "name": "L'Aude à Carcassonne",
+      "from": "2019-01-01",
+      "to": "2025-12-31",
+      "valid_share": 0.998,
+      "median_m": 0.79,
+      "threshold_m": 1.48,
+      "floods": 22,
+      "max_rise_1h_m": 2.46
+    },
+    {
+      "code": "Y210002001",
+      "name": "L'Hérault à Laroque",
+      "from": "2019-01-02",
+      "to": "2025-12-31",
+      "valid_share": 0.902,
+      "median_m": 0.45,
+      "threshold_m": 3.54,
+      "floods": 23,
+      "max_rise_1h_m": 4.58
+    }
+  ],
+  "curves": {
+    "fixed_60": {
+      "ratio": 1.0,
+      "per_year": 8766,
+      "floods": 117,
+      "missed": 4,
+      "delay_mean_min": 26.9,
+      "delay_p90_min": 50.0,
+      "within_15_min": 0.372,
+      "peak_miss_mean_cm": 1.7,
+      "peak_miss_max_cm": 13.2
+    },
+    "fixed_15": {
+      "ratio": 4.0,
+      "per_year": 35064,
+      "floods": 117,
+      "missed": 0,
+      "delay_mean_min": 5.8,
+      "delay_p90_min": 10.0,
+      "within_15_min": 0.983,
+      "peak_miss_mean_cm": 0.3,
+      "peak_miss_max_cm": 7.0
+    },
+    "level": [
+      {
+        "param": 1.0,
+        "ratio": 1.022,
+        "per_year": 8961,
+        "floods": 117,
+        "missed": 4,
+        "delay_mean_min": 26.9,
+        "delay_p90_min": 50.0,
+        "within_15_min": 0.372,
+        "peak_miss_mean_cm": 0.4,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.9,
+        "ratio": 1.029,
+        "per_year": 9019,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 9.2,
+        "delay_p90_min": 25.0,
+        "within_15_min": 0.829,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.8,
+        "ratio": 1.038,
+        "per_year": 9099,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 7.4,
+        "delay_p90_min": 12.0,
+        "within_15_min": 0.906,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.7,
+        "ratio": 1.05,
+        "per_year": 9204,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.5,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.94,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.6,
+        "ratio": 1.067,
+        "per_year": 9354,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.0,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.966,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.5,
+        "ratio": 1.094,
+        "per_year": 9591,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.9,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.974,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.4,
+        "ratio": 1.142,
+        "per_year": 10007,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.9,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.974,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.3,
+        "ratio": 1.227,
+        "per_year": 10756,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.9,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.974,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      }
+    ],
+    "rise": [
+      {
+        "param": 0.4,
+        "ratio": 1.022,
+        "per_year": 8962,
+        "floods": 117,
+        "missed": 3,
+        "delay_mean_min": 26.1,
+        "delay_p90_min": 50.0,
+        "within_15_min": 0.404,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.2,
+        "ratio": 1.024,
+        "per_year": 8980,
+        "floods": 117,
+        "missed": 3,
+        "delay_mean_min": 22.0,
+        "delay_p90_min": 50.0,
+        "within_15_min": 0.535,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.1,
+        "ratio": 1.037,
+        "per_year": 9090,
+        "floods": 117,
+        "missed": 2,
+        "delay_mean_min": 12.4,
+        "delay_p90_min": 40.0,
+        "within_15_min": 0.791,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.05,
+        "ratio": 1.072,
+        "per_year": 9394,
+        "floods": 117,
+        "missed": 1,
+        "delay_mean_min": 9.4,
+        "delay_p90_min": 17.5,
+        "within_15_min": 0.897,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.03,
+        "ratio": 1.124,
+        "per_year": 9853,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 7.1,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.94,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.02,
+        "ratio": 1.184,
+        "per_year": 10382,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.5,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.957,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.01,
+        "ratio": 1.318,
+        "per_year": 11556,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.2,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.966,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      }
+    ],
+    "model": [
+      {
+        "param": 0.97,
+        "ratio": 1.042,
+        "per_year": 9131,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.4,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.949,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.95,
+        "ratio": 1.049,
+        "per_year": 9193,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.2,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.966,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.9,
+        "ratio": 1.063,
+        "per_year": 9317,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 6.2,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.966,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.7,
+        "ratio": 1.1,
+        "per_year": 9642,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.9,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.974,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.5,
+        "ratio": 1.134,
+        "per_year": 9945,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.9,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.974,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.3,
+        "ratio": 1.177,
+        "per_year": 10314,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.9,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.974,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.2,
+        "ratio": 1.213,
+        "per_year": 10636,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.8,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.983,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.1,
+        "ratio": 1.314,
+        "per_year": 11522,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.8,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.983,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      },
+      {
+        "param": 0.05,
+        "ratio": 1.714,
+        "per_year": 15027,
+        "floods": 117,
+        "missed": 0,
+        "delay_mean_min": 5.8,
+        "delay_p90_min": 10.0,
+        "within_15_min": 0.983,
+        "peak_miss_mean_cm": 0.3,
+        "peak_miss_max_cm": 7.0
+      }
+    ]
+  },
+  "operating": {
+    "fixed_60": {
+      "ratio": 1.0,
+      "per_year": 8766,
+      "floods": 117,
+      "missed": 4,
+      "delay_mean_min": 26.9,
+      "delay_p90_min": 50.0,
+      "within_15_min": 0.372,
+      "peak_miss_mean_cm": 1.7,
+      "peak_miss_max_cm": 13.2
+    },
+    "fixed_15": {
+      "ratio": 4.0,
+      "per_year": 35064,
+      "floods": 117,
+      "missed": 0,
+      "delay_mean_min": 5.8,
+      "delay_p90_min": 10.0,
+      "within_15_min": 0.983,
+      "peak_miss_mean_cm": 0.3,
+      "peak_miss_max_cm": 7.0
+    },
+    "level": {
+      "ratio": 1.062,
+      "per_year": 9310,
+      "floods": 117,
+      "missed": 0,
+      "delay_mean_min": 6.4,
+      "delay_p90_min": 10.0,
+      "within_15_min": 0.949,
+      "peak_miss_mean_cm": 0.3,
+      "peak_miss_max_cm": 7.0,
+      "params": {
+        "O200004001": 0.6,
+        "V714401001": 0.6,
+        "Y345401001": 0.6,
+        "V505401001": 0.6,
+        "Y123201002": 0.7,
+        "Y210002001": 0.6
+      }
+    },
+    "rise": {
+      "ratio": 1.159,
+      "per_year": 10163,
+      "floods": 117,
+      "missed": 0,
+      "delay_mean_min": 7.1,
+      "delay_p90_min": 10.0,
+      "within_15_min": 0.94,
+      "peak_miss_mean_cm": 0.3,
+      "peak_miss_max_cm": 7.0,
+      "params": {
+        "O200004001": 0.02,
+        "V714401001": 0.01,
+        "Y345401001": 0.02,
+        "V505401001": 0.02,
+        "Y123201002": 0.03,
+        "Y210002001": 0.02
+      }
+    },
+    "model": {
+      "ratio": 1.044,
+      "per_year": 9151,
+      "floods": 117,
+      "missed": 0,
+      "delay_mean_min": 6.3,
+      "delay_p90_min": 10.0,
+      "within_15_min": 0.957,
+      "peak_miss_mean_cm": 0.3,
+      "peak_miss_max_cm": 7.0,
+      "params": {
+        "O200004001": 0.95,
+        "V714401001": 0.97,
+        "Y345401001": 0.95,
+        "V505401001": 0.97,
+        "Y123201002": 0.97,
+        "Y210002001": 0.95
+      }
+    }
+  },
+  "cost": {
+    "fp32_us": 26.6,
+    "int8_us": 35.0,
+    "parameters": 401,
+    "macs": 368,
+    "fp32_bytes": 2386,
+    "int8_bytes": 5586,
+    "int8_fp32_agreement": 0.999
+  }
+}
