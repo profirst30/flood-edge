@@ -80,5 +80,3 @@ python -m pytest tests
 La page de démo (`docs/index.html`) lit `docs/results.json` et `docs/series.json`. Pour la voir en local : `python -m http.server -d docs`.
 
 Données : hauteurs d'eau instantanées, « données les plus valides », [HydroPortail](https://www.hydro.eaufrance.fr/) (SC Vigicrues, ministère de la Transition écologique), téléchargées le 22/10/2026. Les codes des stations viennent du référentiel de [Hub'Eau](https://hubeau.eaufrance.fr/page/api-hydrometrie). `src/fetch.py` appelle l'adresse que le site utilise pour ses graphiques et son export, qui n'est pas une API documentée ; les mêmes séries s'exportent à la main depuis la page de chaque station. Ni HydroPortail ni Hub'Eau n'affichent de licence pour ces séries. Ce sont des informations publiques de l'État, réutilisables à condition de ne pas les altérer et d'en citer la source et la date (articles L321-1 et L322-1 du code des relations entre le public et l'administration) ; le catalogue Sandre d'Eaufrance indique la Licence Ouverte Etalab pour le référentiel des stations.
-
-Nobel Djessou · [LinkedIn](https://www.linkedin.com/in/nobel-djessou/) · [GitHub](https://github.com/profirst30)
